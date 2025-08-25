@@ -16,6 +16,11 @@ export const frontendNavData: NavProps["data"] = [
 				path: "/analysis",
 				icon: <Icon icon="local:ic-analysis" size="24" />,
 			},
+			{
+				title: "sys.nav.recordings",
+				path: "/recordings",
+				icon: <Icon icon="mdi:filmstrip" size="24" />,
+			},
 		],
 	},
 	{

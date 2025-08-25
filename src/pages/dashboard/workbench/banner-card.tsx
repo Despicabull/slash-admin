@@ -31,7 +31,7 @@ export default function BannerCard() {
 								Explore Redesigned {GLOBAL_CONFIG.appName}
 							</Title>
 							<Text className="text-white">
-								The rand new User Interface with power of Shadcn/ui Components. Explore the Endless possibilities with{" "}
+								The brand new User Interface with power of Shadcn/ui Components. Explore the Endless possibilities with{" "}
 								{GLOBAL_CONFIG.appName}.
 							</Text>
 

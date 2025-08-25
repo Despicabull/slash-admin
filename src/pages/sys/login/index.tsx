@@ -6,11 +6,8 @@ import SettingButton from "@/layouts/components/setting-button";
 import { useUserToken } from "@/store/userStore";
 import { Navigate } from "react-router";
 import LoginForm from "./login-form";
-import MobileForm from "./mobile-form";
 import { LoginProvider } from "./providers/login-provider";
-import QrCodeFrom from "./qrcode-form";
 import RegisterForm from "./register-form";
-import ResetForm from "./reset-form";
 
 function LoginPage() {
 	const token = useUserToken();
@@ -32,17 +29,18 @@ function LoginPage() {
 					<div className="w-full max-w-xs">
 						<LoginProvider>
 							<LoginForm />
-							<MobileForm />
-							<QrCodeFrom />
 							<RegisterForm />
-							<ResetForm />
 						</LoginProvider>
 					</div>
 				</div>
 			</div>
 
 			<div className="relative hidden bg-background-paper lg:block">
-				<img src={PlaceholderImg} alt="placeholder img" className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.5] dark:grayscale" />
+				<img
+					src={PlaceholderImg}
+					alt="placeholder img"
+					className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.5] dark:grayscale"
+				/>
 			</div>
 
 			<div className="absolute right-2 top-0 flex flex-row">

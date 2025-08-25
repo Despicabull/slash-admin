@@ -73,6 +73,30 @@ export interface Permission extends CommonOptions {
 	code: string; // resource:action  example: "user-management:read"
 }
 
+export interface RecordingInfo extends CommonOptions {
+	id: string;
+	deviceName: string;
+	startTime: string;
+	endTime: string;
+	duration: number;
+	videoSrc: string;
+	fileSize?: number;
+}
+
+export interface DeviceInfo extends CommonOptions {
+	id: string;
+	name: string;
+	version: string;
+	hostname: string;
+	macs: string[];
+	ips: string[];
+	uptime: string;
+	totalMemory: string;
+	usedMemory: string;
+	onvif: string;
+	lastHeartbeat: string;
+}
+
 export interface Menu extends CommonOptions, MenuMetaInfo {
 	id: string; // uuid
 	parentId: string;
@@ -82,7 +106,9 @@ export interface Menu extends CommonOptions, MenuMetaInfo {
 	type: PermissionType;
 }
 
-export type MenuMetaInfo = Partial<Pick<NavItemDataProps, "path" | "icon" | "caption" | "info" | "disabled" | "auth" | "hidden">> & {
+export type MenuMetaInfo = Partial<
+	Pick<NavItemDataProps, "path" | "icon" | "caption" | "info" | "disabled" | "auth" | "hidden">
+> & {
 	externalLink?: URL;
 	component?: string;
 };
