@@ -90,14 +90,16 @@
 			"ui": "UI",
 			"custom_ui_components": "自定义UI组件",
 			"recordings": "录音",
+			"roles": "角色",
 			"workbench": "工作台",
 			"analysis": "分析",
 			"management": "管理",
-			"user": {
-				"index": "用户",
-				"profile": "个人资料",
-				"account": "账户"
-			},
+			"users": "用户",
+			"monitoring": "监控",
+			"devices": "设备",
+			"sites": "站点",
+			"groups": "分组",
+			"live_view": "实时查看",
 			"system": {
 				"index": "系统",
 				"organization": "组织",

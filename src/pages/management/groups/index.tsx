@@ -14,7 +14,7 @@ function getStatus(latestHeartbeat?: string): "online" | "offline" {
 	return diff < 60 * 1000 ? "online" : "offline"; // online if < 60s
 }
 
-export default function WorkbenchPage() {
+export default function GroupsPage() {
 	const [activeTab, setActiveTab] = useState("All Devices");
 	const [allDevices, setAllDevices] = useState<DeviceInfo[]>([]);
 	const [allRecordings, setAllRecordings] = useState<RecordingInfo[]>([]);

@@ -99,6 +99,8 @@
 			"iframe": "Iframe",
 			"kanban": "Kanban",
 			"label": "Item Label",
+			"live_view": "Live View",
+			"groups": "Groups",
 			"permission": "Permission",
 			"permission.page_test": "Page Permission Test",
 			"management": "Management",
@@ -116,7 +118,11 @@
 				},
 				"index": "Menu Level"
 			},
+			"monitoring": "Monitoring",
 			"recordings": "Recordings",
+			"roles": "Roles",
+			"devices": "Devices",
+			"sites": "Sites",
 			"scroll": "Scroll",
 			"system": {
 				"index": "System",
@@ -129,11 +135,7 @@
 			"toast": "Toast",
 			"token_expired": "Token Expired",
 			"upload": "Upload",
-			"user": {
-				"account": "Account",
-				"index": "User",
-				"profile": "Profile"
-			},
+			"users": "Users",
 			"workbench": "Workbench"
 		},
 		"settings": {

@@ -35,7 +35,7 @@ export const VideoCard = ({ recording }: VideoCardProps) => {
             >
                 <CardContent className="p-4">
                     <video 
-                        src={videoSrc} 
+                        src={"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"} 
                         className="w-full aspect-video object-cover rounded mb-4 pointer-events-none"
                         preload="metadata"
                         muted
@@ -60,7 +60,7 @@ export const VideoCard = ({ recording }: VideoCardProps) => {
                             </button>
                         </div>
                         <video 
-                            src={videoSrc} 
+                            src={"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"} 
                             controls 
                             autoPlay
                             className="w-full h-auto rounded"
