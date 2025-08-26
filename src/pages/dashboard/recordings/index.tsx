@@ -5,14 +5,14 @@ import { Text } from "@/ui/typography";
 import { VideoCard } from "./video-card";
 import { useState, useEffect } from "react";
 import recordingService from "@/api/services/recordingService";
-import type { RecordingInfo, DeviceInfo } from "#/entity";
+import type { Recording, Device } from "#/entity";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import { Checkbox } from "@/ui/checkbox";
 import deviceService from "@/api/services/deviceService";
 
 export default function RecordingsPage() {
-	const [recordings, setRecordings] = useState<RecordingInfo[]>([]);
-	const [allDevices, setAllDevices] = useState<DeviceInfo[]>([]);
+	const [recordings, setRecordings] = useState<Recording[]>([]);
+	const [allDevices, setAllDevices] = useState<Device[]>([]);
 	const [page, setPage] = useState(1);
 	const [limit] = useState(10);
 	const [selectedDevices, setSelectedDevices] = useState<string[]>([]);

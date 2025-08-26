@@ -8,7 +8,7 @@ export const frontendNavData: NavProps["data"] = [
 			{
 				title: "sys.nav.dashboard",
 				path: "/dashboard",
-				icon: <Icon icon="local:ic-workbench" size="24" />,
+				icon: <Icon icon="mdi:monitor-dashboard" size="24" />,
 			},
 			{
 				title: "sys.nav.live_view",
@@ -48,7 +48,7 @@ export const frontendNavData: NavProps["data"] = [
 			{
 				title: "sys.nav.groups",
 				path: "/groups",
-				icon: <Icon icon="mdi:account-group" size="24" />,
+				icon: <Icon icon="mdi:select-group" size="24" />,
 			},
 		]
 	},

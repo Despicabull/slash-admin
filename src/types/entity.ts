@@ -1,5 +1,5 @@
 import type { NavItemDataProps } from "@/components/nav/types";
-import type { BasicStatus, PermissionType } from "./enum";
+import type { BasicStatus, GroupType, PermissionType } from "./enum";
 
 export interface UserToken {
 	accessToken?: string;
@@ -53,7 +53,7 @@ export interface CommonOptions {
 	updatedAt?: string;
 }
 export interface User extends CommonOptions {
-	id: string; // uuid
+	id: string;
 	username: string;
 	password: string;
 	email: string;
@@ -62,18 +62,32 @@ export interface User extends CommonOptions {
 }
 
 export interface Role extends CommonOptions {
-	id: string; // uuid
+	id: string;
 	name: string;
 	code: string;
 }
 
 export interface Permission extends CommonOptions {
-	id: string; // uuid
+	id: string;
 	name: string;
-	code: string; // resource:action  example: "user-management:read"
+	code: string;
 }
 
-export interface RecordingInfo extends CommonOptions {
+export interface Group extends CommonOptions {
+	id: string;
+	name: string;
+	type: GroupType;
+	devices?: Device[];
+}
+
+export interface Site extends CommonOptions {
+	id: string;
+	name: string;
+	address?: string;
+	devices?: Device[];
+}
+
+export interface Recording extends CommonOptions {
 	id: string;
 	deviceName: string;
 	startTime: string;
@@ -83,7 +97,7 @@ export interface RecordingInfo extends CommonOptions {
 	fileSize?: number;
 }
 
-export interface DeviceInfo extends CommonOptions {
+export interface Device extends CommonOptions {
 	id: string;
 	name: string;
 	version: string;

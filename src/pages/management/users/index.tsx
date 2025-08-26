@@ -1,7 +1,7 @@
 import deviceService from "@/api/services/deviceService";
 import { Chart, useChart } from "@/components/chart";
 import Icon from "@/components/icon/icon";
-import { DeviceInfo, RecordingInfo } from "@/types/entity";
+import { Device, Recording } from "@/types/entity";
 import { Button } from "@/ui/button";
 import { Card, CardContent } from "@/ui/card";
 import { Text, Title } from "@/ui/typography";
@@ -16,8 +16,8 @@ function getStatus(latestHeartbeat?: string): "online" | "offline" {
 
 export default function UsersPage() {
     const [activeTab, setActiveTab] = useState("All Devices");
-    const [allDevices, setAllDevices] = useState<DeviceInfo[]>([]);
-    const [allRecordings, setAllRecordings] = useState<RecordingInfo[]>([]);
+    const [allDevices, setAllDevices] = useState<Device[]>([]);
+    const [allRecordings, setAllRecordings] = useState<Recording[]>([]);
 
     useEffect(() => {
         const getDevices = async () => {
@@ -29,7 +29,7 @@ export default function UsersPage() {
             }
         };
 
-        // 🔹 Fetch recordings (replace with your real API call)
+        // Fetch recordings (replace with your real API call)
         const getRecordings = async () => {
             try {
                 // TODO: implement fetchRecordings service
@@ -43,18 +43,18 @@ export default function UsersPage() {
         getRecordings();
     }, []);
 
-    // 🔹 Enrich devices with status
+    // Enrich devices with status
     const enrichedDevices = allDevices.map((d) => ({
         ...d,
         status: getStatus(d.lastHeartbeat),
     }));
 
-    // 🔹 Quick stats values
+    // Quick stats values
     const onlineCount = enrichedDevices.filter((d) => d.status === "online").length;
     const totalDevices = enrichedDevices.length;
     const totalRecordings = allRecordings.length;
 
-    // 🔹 Quick stats (only devices x/y and total recordings)
+    // Quick stats (only devices x/y and total recordings)
     const quickStats = [
         {
             icon: "mdi:devices",
@@ -72,7 +72,7 @@ export default function UsersPage() {
         },
     ];
 
-    // 🔹 Filter based on tab
+    // Filter based on tab
     const filteredDevices = enrichedDevices.filter((d) => {
         if (activeTab === "All Devices") return true;
         if (activeTab === "Online") return d.status === "online";

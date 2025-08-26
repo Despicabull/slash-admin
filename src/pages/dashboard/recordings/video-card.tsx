@@ -1,10 +1,10 @@
 import { Card, CardContent } from "@/ui/card";
 import { Text } from "@/ui/typography";
 import { useState } from "react";
-import type { RecordingInfo } from "#/entity";
+import type { Recording } from "#/entity";
 
 export interface VideoCardProps {
-    recording: RecordingInfo;
+    recording: Recording;
 }
 
 export const VideoCard = ({ recording }: VideoCardProps) => {

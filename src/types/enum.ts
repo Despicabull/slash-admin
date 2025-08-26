@@ -3,6 +3,11 @@ export enum BasicStatus {
 	ENABLE = 1,
 }
 
+export enum GroupType {
+	SITE = 0,
+	DEVICE = 1,
+}
+
 export enum ResultStatus {
 	SUCCESS = 0,
 	ERROR = -1,
