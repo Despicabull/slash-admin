@@ -5,12 +5,7 @@ import { Card } from "@/ui/card";
 import { Text } from "@/ui/typography";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-
-function getStatus(latestHeartbeat?: string): "online" | "offline" {
-    if (!latestHeartbeat) return "offline";
-    const diff = Date.now() - new Date(latestHeartbeat).getTime();
-    return diff < 60 * 1000 ? "online" : "offline"; // online if < 60s
-}
+import { getDeviceStatus } from "@/utils/device";
 
 export default function DevicesPage() {
     const navigate = useNavigate();
@@ -33,7 +28,7 @@ export default function DevicesPage() {
     // Enrich devices with status
     const enrichedDevices = allDevices.map((d) => ({
         ...d,
-        status: getStatus(d.lastHeartbeat),
+        status: getDeviceStatus(d.lastHeartbeat),
     }));
 
     // Filter based on tab

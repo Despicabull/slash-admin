@@ -7,12 +7,7 @@ import { Card, CardContent } from "@/ui/card";
 import { Text, Title } from "@/ui/typography";
 import { rgbAlpha } from "@/utils/theme";
 import { useEffect, useState } from "react";
-
-function getStatus(latestHeartbeat?: string): "online" | "offline" {
-    if (!latestHeartbeat) return "offline";
-    const diff = Date.now() - new Date(latestHeartbeat).getTime();
-    return diff < 60 * 1000 ? "online" : "offline"; // online if < 60s
-}
+import { getDeviceStatus } from "@/utils/device";
 
 export default function RolesPage() {
     const [activeTab, setActiveTab] = useState("All Devices");
@@ -46,7 +41,7 @@ export default function RolesPage() {
     // Enrich devices with status
     const enrichedDevices = allDevices.map((d) => ({
         ...d,
-        status: getStatus(d.lastHeartbeat),
+        status: getDeviceStatus(d.lastHeartbeat),
     }));
 
     // Quick stats values

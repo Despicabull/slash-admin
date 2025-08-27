@@ -35,7 +35,7 @@ export const VideoCard = ({ recording }: VideoCardProps) => {
             >
                 <CardContent className="p-4">
                     <video 
-                        src={"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"} 
+                        src={videoSrc} 
                         className="w-full aspect-video object-cover rounded mb-4 pointer-events-none"
                         preload="metadata"
                         muted

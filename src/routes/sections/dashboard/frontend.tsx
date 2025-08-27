@@ -15,8 +15,20 @@ export function getFrontendDashboardRoutes(): RouteObject[] {
 				{ path: ":id", element: Component("/pages/management/devices/detail") }
 			]
 		},
-		{ path: "sites", element: Component("/pages/management/sites") },
-		{ path: "groups", element: Component("/pages/management/groups") },
+		{ 
+			path: "sites", 
+			element: Component("/pages/management/sites"),
+			children: [
+				{ path: ":id", element: Component("/pages/management/sites/detail") }
+			]
+		},
+		{ 
+			path: "groups", 
+			element: Component("/pages/management/groups"),
+			children: [
+				{ path: ":id", element: Component("/pages/management/groups/detail") }
+			]
+		},
 	];
 	return frontendDashboardRoutes;
 }

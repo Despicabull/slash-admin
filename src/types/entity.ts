@@ -109,6 +109,7 @@ export interface Device extends CommonOptions {
 	usedMemory: string;
 	onvif: string;
 	lastHeartbeat: string;
+	streamUrl?: string;
 }
 
 export interface Menu extends CommonOptions, MenuMetaInfo {

@@ -5,12 +5,7 @@ import { Button } from "@/ui/button";
 import { Card } from "@/ui/card";
 import { Text } from "@/ui/typography";
 import { useNavigate, useParams } from "react-router";
-
-function getStatus(latestHeartbeat?: string): "online" | "offline" {
-    if (!latestHeartbeat) return "offline";
-    const diff = Date.now() - new Date(latestHeartbeat).getTime();
-    return diff < 60 * 1000 ? "online" : "offline"; // online if < 60s
-}
+import { getDeviceStatus } from "@/utils/device";
 
 export default function DeviceDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -52,7 +47,7 @@ export default function DeviceDetailPage() {
         return <div className="p-6">Device not found</div>;
     }
 
-    const status = getStatus(device.lastHeartbeat);
+    const status = getDeviceStatus(device.lastHeartbeat);
 
     return (
         <div className="flex flex-col gap-4 w-full">
