@@ -12,9 +12,8 @@ export interface UserInfo {
 	username: string;
 	password?: string;
 	avatar?: string;
-	roles?: Role[];
+	role: Role;
 	status?: BasicStatus;
-	permissions?: Permission[];
 	menu?: MenuTree[];
 }
 
@@ -65,6 +64,7 @@ export interface Role extends CommonOptions {
 	id: string;
 	name: string;
 	code: string;
+	permissions?: Permission[];
 }
 
 export interface Permission extends CommonOptions {
@@ -113,7 +113,7 @@ export interface Device extends CommonOptions {
 }
 
 export interface Menu extends CommonOptions, MenuMetaInfo {
-	id: string; // uuid
+	id: string;
 	parentId: string;
 	name: string;
 	code: string;

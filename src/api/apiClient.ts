@@ -45,6 +45,9 @@ class APIClient {
 	get<T = unknown>(config: AxiosRequestConfig): Promise<T> {
 		return this.request<T>({ ...config, method: "GET" });
 	}
+	patch<T = unknown>(config: AxiosRequestConfig): Promise<T> {
+		return this.request<T>({ ...config, method: "PATCH" });
+	}
 	post<T = unknown>(config: AxiosRequestConfig): Promise<T> {
 		return this.request<T>({ ...config, method: "POST" });
 	}

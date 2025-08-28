@@ -144,6 +144,7 @@
 			"calendar": "日历",
 			"kanban": "看板",
 			"permission": "权限",
+			"permissions": "权限",
 			"permission.page_test": "页面鉴权测试",
 			"error": {
 				"index": "异常页",

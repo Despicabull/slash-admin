@@ -1,4 +1,4 @@
-import { useUserInfo, useUserToken } from "@/store/userStore";
+import { useUserRole, useUserPermissions, useUserToken } from "@/store/userStore";
 
 /**
  * permission/role check hook
@@ -20,33 +20,27 @@ import { useUserInfo, useUserToken } from "@/store/userStore";
  */
 export const useAuthCheck = (baseOn: "role" | "permission" = "permission") => {
 	const { accessToken } = useUserToken();
-	const { permissions = [], roles = [] } = useUserInfo();
+	const role = useUserRole(); // assuming: Role (e.g., { code: string, ... })
+	const permissions = useUserPermissions(); // assuming: Permission[] (e.g., [{ code: string }, ...])
 
-	// depends on baseOn to select resource pool
-	const resourcePool = baseOn === "role" ? roles : permissions;
-
-	// check if item exists
 	const check = (item: string): boolean => {
-		// if user is not logged in, return false
-		if (!accessToken) {
-			return false;
+		if (!accessToken) return false;
+
+		if (baseOn === "role") {
+			return role?.code === item;
 		}
-		return resourcePool.some((p) => p.code === item);
+
+		// Here TypeScript knows permissions is a Permission[]
+		return permissions.some((p) => p.code === item);
 	};
 
-	// check if any item exists
-	const checkAny = (items: string[]) => {
-		if (items.length === 0) {
-			return true;
-		}
+	const checkAny = (items: string[]): boolean => {
+		if (items.length === 0) return true;
 		return items.some((item) => check(item));
 	};
 
-	// check if all items exist
-	const checkAll = (items: string[]) => {
-		if (items.length === 0) {
-			return true;
-		}
+	const checkAll = (items: string[]): boolean => {
+		if (items.length === 0) return true;
 		return items.every((item) => check(item));
 	};
 

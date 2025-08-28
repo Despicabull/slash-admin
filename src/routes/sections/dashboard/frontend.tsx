@@ -6,6 +6,7 @@ export function getFrontendDashboardRoutes(): RouteObject[] {
 		{ path: "dashboard", element: Component("/pages/dashboard/workbench") },
 		{ path: "live-view", element: Component("/pages/dashboard/live_view") },
 		{ path: "recordings", element: Component("/pages/dashboard/recordings") },
+		{ path: "permissions", element: Component("/pages/management/permissions") },
 		{ path: "roles", element: Component("/pages/management/roles") },
 		{ path: "users", element: Component("/pages/management/users") },
 		{ 

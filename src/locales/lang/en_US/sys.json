@@ -102,6 +102,7 @@
 			"live_view": "Live View",
 			"groups": "Groups",
 			"permission": "Permission",
+			"permissions": "Permission",
 			"permission.page_test": "Page Permission Test",
 			"management": "Management",
 			"markdown": "Markdown",

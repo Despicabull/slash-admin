@@ -7,8 +7,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
-		"preview": "vite preview",
-		"preinstall": "lefthook install"
+		"preview": "vite preview"
 	},
 	"dependencies": {
 		"@ant-design/cssinjs": "^1.22.0",
