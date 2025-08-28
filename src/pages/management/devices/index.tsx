@@ -10,23 +10,38 @@ import { getDeviceStatus } from "@/utils/device";
 export default function DevicesPage() {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("All Devices");
-    const [allDevices, setAllDevices] = useState<Device[]>([]);
+    const [devices, setDevices] = useState<Device[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const getDevices = async () => {
             try {
+                setLoading(true);
                 const data = await deviceService.fetchDevices();
-                setAllDevices(data);
-            } catch (error) {
-                console.error("Failed to fetch devices", error);
+                setDevices(data);
+                setError(null);
+            } catch (err) {
+                console.error("Failed to fetch devices", err);
+                setError("Failed to load devices");
+            } finally {
+                setLoading(false);
             }
         };
 
         getDevices();
     }, []);
 
+    if (loading) {
+        return <div className="p-6">Loading groups...</div>;
+    }
+
+    if (error) {
+        return <div className="p-6 text-red-500">{error}</div>;
+    }
+
     // Enrich devices with status
-    const enrichedDevices = allDevices.map((d) => ({
+    const enrichedDevices = devices.map((d) => ({
         ...d,
         status: getDeviceStatus(d.lastHeartbeat),
     }));
@@ -79,7 +94,7 @@ export default function DevicesPage() {
                                 {filteredDevices.map((d) => (
                                     <tr 
                                         key={d.id} 
-                                        className="border-b last:border-0 hover:bg-gray-50 cursor-pointer"
+                                        className="border-b last:border-0 cursor-pointer"
                                         onClick={() => handleRowClick(d.id)}
                                     >
                                         <td className="py-2 font-semibold">{d.name}</td>

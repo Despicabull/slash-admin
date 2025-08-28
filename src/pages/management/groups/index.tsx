@@ -63,7 +63,7 @@ export default function GroupsPage() {
                             {groups.map((group) => (
                                 <tr 
                                     key={group.id} 
-                                    className="border-b last:border-0 hover:bg-gray-50 cursor-pointer"
+                                    className="border-b last:border-0 cursor-pointer"
                                     onClick={() => handleRowClick(group.id)}
                                 >
                                     <td className="py-2 font-semibold">{group.name}</td>

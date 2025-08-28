@@ -22,7 +22,6 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
 	(res: AxiosResponse<Result<any>>) => {
-		console.log("Response:", res.data);
 		if (!res.data) throw new Error(t("sys.api.apiRequestFailed"));
 		const { status, data, message } = res.data;
 		if (status === ResultStatus.SUCCESS) {

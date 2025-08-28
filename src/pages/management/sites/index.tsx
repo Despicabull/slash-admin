@@ -63,7 +63,7 @@ export default function SitesPage() {
                             {sites.map((site) => (
                                 <tr 
                                     key={site.id} 
-                                    className="border-b last:border-0 hover:bg-gray-50 cursor-pointer"
+                                    className="border-b last:border-0 cursor-pointer"
                                     onClick={() => handleRowClick(site.id)}
                                 >
                                     <td className="py-2 font-semibold">{site.name}</td>

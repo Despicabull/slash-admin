@@ -56,6 +56,7 @@ export interface User extends CommonOptions {
 	username: string;
 	password: string;
 	email: string;
+	role: Role;
 	phone?: string;
 	avatar?: string;
 }
