@@ -11,19 +11,34 @@ function isDeviceOnline(device: Device): boolean {
 
 export default function LiveViewPage() {
 	const [devices, setDevices] = useState<Device[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		const getDevices = async () => {
 			try {
+				setLoading(true);
 				const data = await deviceService.fetchDevices();
 				setDevices(data);
-			} catch (error) {
-				console.error("Failed to fetch devices", error);
+				setError(null);
+			} catch (err) {
+				console.error("Failed to fetch devices", err);
+				setError("Failed to load devices");
+			} finally {
+				setLoading(false);
 			}
 		};
 
 		getDevices();
 	}, []);
+
+	if (loading) {
+		return <div className="p-6">Loading devices...</div>;
+	}
+
+	if (error) {
+		return <div className="p-6 text-red-500">{error}</div>;
+	}
 
 	const onlineDevices = devices.filter(isDeviceOnline);
 

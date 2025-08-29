@@ -12,35 +12,67 @@ import { VideoCard } from "./video-card";
 
 export default function RecordingsPage() {
 	const [recordings, setRecordings] = useState<Recording[]>([]);
+	const [recordingsLoading, setRecordingsLoading] = useState(true);
+	const [recordingsError, setRecordingsError] = useState<string | null>(null);
 	const [devices, setDevices] = useState<Device[]>([]);
+	const [devicesLoading, setDevicesLoading] = useState(true);
+	const [devicesError, setDevicesError] = useState<string | null>(null);
 	const [page, setPage] = useState(1);
 	const [limit] = useState(10);
 	const [selectedDevices, setSelectedDevices] = useState<string[]>([]);
 	const [date, setDate] = useState("");
 
 	useEffect(() => {
-		const getRecordings = async () => {
+		const getDevices = async () => {
 			try {
-				const data = await recordingService.fetchRecordings(page, limit, selectedDevices, date);
-				setRecordings(data);
-			} catch (error) {
-				console.error("Failed to fetch recordings", error);
+				setDevicesLoading(true);
+				const data = await deviceService.fetchDevices();
+				setDevices(data);
+				setDevicesError(null);
+			} catch (err) {
+				console.error("Failed to fetch devices", err);
+				setDevicesError("Failed to load devices");
+			} finally {
+				setDevicesLoading(false);
 			}
 		};
+
+		getDevices();
+	}, []);
+
+	useEffect(() => {
+		const getRecordings = async () => {
+			try {
+				setRecordingsLoading(true);
+				const data = await recordingService.fetchRecordings(page, limit, selectedDevices, date);
+				setRecordings(data);
+				setRecordingsError(null);
+			} catch (err) {
+				console.error("Failed to fetch recordings", err);
+				setRecordingsError("Failed to load recordings");
+			} finally {
+				setRecordingsLoading(false);
+			}
+		};
+
 		getRecordings();
 	}, [page, limit, selectedDevices, date]);
 
-	useEffect(() => {
-		const getDevices = async () => {
-			try {
-				const data = await deviceService.fetchDevices();
-				setDevices(data);
-			} catch (error) {
-				console.error("Failed to fetch devices", error);
-			}
-		};
-		getDevices();
-	}, []);
+	if (devicesLoading) {
+		return <div className="p-6">Loading devices...</div>;
+	}
+
+	if (devicesError) {
+		return <div className="p-6 text-red-500">{devicesError}</div>;
+	}
+
+	if (recordingsLoading) {
+		return <div className="p-6">Loading recordings...</div>;
+	}
+
+	if (recordingsError) {
+		return <div className="p-6 text-red-500">{recordingsError}</div>;
+	}
 
 	const handleDeviceChange = (deviceName: string) => {
 		setSelectedDevices((prev) =>

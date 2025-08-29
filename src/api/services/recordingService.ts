@@ -7,9 +7,11 @@ export enum RecordingApi {
 
 const fetchRecordings = (page: number, limit: number, devices?: string[], date?: string) =>
 	apiClient.get<Recording[]>({ url: RecordingApi.Recordings, params: { page, limit, devices, date } });
+const fetchRecordingsCount = () => apiClient.get<number>({ url: `${RecordingApi.Recordings}/count` });
 const fetchByRecordingId = (id: string) => apiClient.get<Recording>({ url: `${RecordingApi.Recordings}/${id}` });
 
 export default {
 	fetchRecordings,
+	fetchRecordingsCount,
 	fetchByRecordingId,
 };

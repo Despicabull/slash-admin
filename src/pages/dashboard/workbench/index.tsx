@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import deviceService from "@/api/services/deviceService";
+import recordingService from "@/api/services/recordingService";
 import { Chart, useChart } from "@/components/chart";
 import Icon from "@/components/icon/icon";
-import type { Device, Recording } from "@/types/entity";
+import type { Device } from "@/types/entity";
 import { Button } from "@/ui/button";
 import { Card, CardContent } from "@/ui/card";
 import { Text, Title } from "@/ui/typography";
@@ -12,7 +13,11 @@ import { rgbAlpha } from "@/utils/theme";
 export default function WorkbenchPage() {
 	const [activeTab, setActiveTab] = useState("All Devices");
 	const [devices, setDevices] = useState<Device[]>([]);
-	const [recordings, setRecordings] = useState<Recording[]>([]);
+	const [devicesLoading, setDevicesLoading] = useState(true);
+	const [devicesError, setDevicesError] = useState<string | null>(null);
+	const [recordingCount, setRecordingCount] = useState<number>(0);
+	const [recordingCountLoading, setRecordingCountLoading] = useState(true);
+	const [recordingCountError, setRecordingCountError] = useState<string | null>(null);
 
 	// Move useChart to top level - create chart options for each stat type
 	const deviceChartOptions = useChart({
@@ -34,26 +39,54 @@ export default function WorkbenchPage() {
 	useEffect(() => {
 		const getDevices = async () => {
 			try {
+				setDevicesLoading(true);
 				const data = await deviceService.fetchDevices();
 				setDevices(data);
-			} catch (error) {
-				console.error("Failed to fetch devices", error);
-			}
-		};
-
-		// Fetch recordings (replace with your real API call)
-		const getRecordings = async () => {
-			try {
-				// TODO: implement fetchRecordings service
-				setRecordings([]);
-			} catch (error) {
-				console.error("Failed to fetch recordings", error);
+				setDevicesError(null);
+			} catch (err) {
+				console.error("Failed to fetch devices", err);
+				setDevicesError("Failed to load devices");
+			} finally {
+				setDevicesLoading(false);
 			}
 		};
 
 		getDevices();
-		getRecordings();
 	}, []);
+
+	useEffect(() => {
+		const getRecordingCount = async () => {
+			try {
+				setRecordingCountLoading(true);
+				const data = await recordingService.fetchRecordingsCount();
+				setRecordingCount(data);
+				setRecordingCountError(null);
+			} catch (err) {
+				console.error("Failed to fetch devices", err);
+				setRecordingCountError("Failed to load devices");
+			} finally {
+				setRecordingCountLoading(false);
+			}
+		};
+
+		getRecordingCount();
+	}, []);
+
+	if (devicesLoading) {
+		return <div className="p-6">Loading devices...</div>;
+	}
+
+	if (devicesError) {
+		return <div className="p-6 text-red-500">{devicesError}</div>;
+	}
+
+	if (recordingCountLoading) {
+		return <div className="p-6">Loading recording count...</div>;
+	}
+
+	if (recordingCountError) {
+		return <div className="p-6 text-red-500">{recordingCountError}</div>;
+	}
 
 	// Enrich devices with status
 	const enrichedDevices = devices.map((d) => ({
@@ -64,7 +97,6 @@ export default function WorkbenchPage() {
 	// Quick stats values
 	const onlineCount = enrichedDevices.filter((d) => d.status === "online").length;
 	const totalDevices = enrichedDevices.length;
-	const totalRecordings = recordings.length;
 
 	// Quick stats (only devices x/y and total recordings)
 	const quickStats = [
@@ -79,7 +111,7 @@ export default function WorkbenchPage() {
 		{
 			icon: "mdi:filmstrip",
 			label: "Recordings",
-			value: String(totalRecordings),
+			value: recordingCount,
 			color: "#10b981",
 			chartOptions: recordingsChartOptions,
 			chartData: [],
