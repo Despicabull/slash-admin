@@ -1,24 +1,41 @@
+import { useEffect, useState } from "react";
 import deviceService from "@/api/services/deviceService";
 import { Chart, useChart } from "@/components/chart";
 import Icon from "@/components/icon/icon";
-import { Device, Recording } from "@/types/entity";
+import type { Device, Recording } from "@/types/entity";
 import { Button } from "@/ui/button";
 import { Card, CardContent } from "@/ui/card";
 import { Text, Title } from "@/ui/typography";
-import { rgbAlpha } from "@/utils/theme";
-import { useEffect, useState } from "react";
 import { getDeviceStatus } from "@/utils/device";
+import { rgbAlpha } from "@/utils/theme";
 
 export default function WorkbenchPage() {
 	const [activeTab, setActiveTab] = useState("All Devices");
-	const [allDevices, setAllDevices] = useState<Device[]>([]);
-	const [allRecordings, setAllRecordings] = useState<Recording[]>([]);
+	const [devices, setDevices] = useState<Device[]>([]);
+	const [recordings, setRecordings] = useState<Recording[]>([]);
+
+	// Move useChart to top level - create chart options for each stat type
+	const deviceChartOptions = useChart({
+		chart: { sparkline: { enabled: true } },
+		colors: ["#3b82f6"],
+		grid: { show: false },
+		yaxis: { show: false },
+		tooltip: { enabled: false },
+	});
+
+	const recordingsChartOptions = useChart({
+		chart: { sparkline: { enabled: true } },
+		colors: ["#10b981"],
+		grid: { show: false },
+		yaxis: { show: false },
+		tooltip: { enabled: false },
+	});
 
 	useEffect(() => {
 		const getDevices = async () => {
 			try {
 				const data = await deviceService.fetchDevices();
-				setAllDevices(data);
+				setDevices(data);
 			} catch (error) {
 				console.error("Failed to fetch devices", error);
 			}
@@ -28,7 +45,7 @@ export default function WorkbenchPage() {
 		const getRecordings = async () => {
 			try {
 				// TODO: implement fetchRecordings service
-				setAllRecordings([]);
+				setRecordings([]);
 			} catch (error) {
 				console.error("Failed to fetch recordings", error);
 			}
@@ -39,7 +56,7 @@ export default function WorkbenchPage() {
 	}, []);
 
 	// Enrich devices with status
-	const enrichedDevices = allDevices.map((d) => ({
+	const enrichedDevices = devices.map((d) => ({
 		...d,
 		status: getDeviceStatus(d.lastHeartbeat),
 	}));
@@ -47,7 +64,7 @@ export default function WorkbenchPage() {
 	// Quick stats values
 	const onlineCount = enrichedDevices.filter((d) => d.status === "online").length;
 	const totalDevices = enrichedDevices.length;
-	const totalRecordings = allRecordings.length;
+	const totalRecordings = recordings.length;
 
 	// Quick stats (only devices x/y and total recordings)
 	const quickStats = [
@@ -56,14 +73,16 @@ export default function WorkbenchPage() {
 			label: "Devices",
 			value: `${onlineCount} / ${totalDevices}`,
 			color: "#3b82f6",
-			chart: [],
+			chartOptions: deviceChartOptions,
+			chartData: [],
 		},
 		{
 			icon: "mdi:filmstrip",
 			label: "Recordings",
 			value: String(totalRecordings),
 			color: "#10b981",
-			chart: [],
+			chartOptions: recordingsChartOptions,
+			chartData: [],
 		},
 	];
 
@@ -83,10 +102,7 @@ export default function WorkbenchPage() {
 					<Card key={stat.label} className="flex flex-col justify-between h-full">
 						<CardContent className="flex flex-col gap-2 p-4">
 							<div className="flex items-center gap-2">
-								<div
-									className="rounded-lg p-2"
-									style={{ background: rgbAlpha(stat.color, 0.1) }}
-								>
+								<div className="rounded-lg p-2" style={{ background: rgbAlpha(stat.color, 0.1) }}>
 									<Icon icon={stat.icon} size={24} color={stat.color} />
 								</div>
 								<Text variant="body2" className="font-semibold">
@@ -99,18 +115,7 @@ export default function WorkbenchPage() {
 								</Title>
 							</div>
 							<div className="w-full h-10 mt-2">
-								<Chart
-									type="bar"
-									height={40}
-									options={useChart({
-										chart: { sparkline: { enabled: true } },
-										colors: [stat.color],
-										grid: { show: false },
-										yaxis: { show: false },
-										tooltip: { enabled: false },
-									})}
-									series={[{ data: stat.chart }]}
-								/>
+								<Chart type="bar" height={40} options={stat.chartOptions} series={[{ data: stat.chartData }]} />
 							</div>
 						</CardContent>
 					</Card>
@@ -152,17 +157,13 @@ export default function WorkbenchPage() {
 									<tr key={d.name} className="border-b last:border-0">
 										<td className="py-2 font-semibold">{d.name}</td>
 										<td className="py-2 text-right">
-											{d.lastHeartbeat
-												? new Date(d.lastHeartbeat).toLocaleString()
-												: "No heartbeat"}
+											{d.lastHeartbeat ? new Date(d.lastHeartbeat).toLocaleString() : "No heartbeat"}
 										</td>
 										<td className="py-2 text-right">{d.uptime}</td>
 										<td className="py-2 text-right">
 											<span
 												className={`text-xs font-bold inline-flex items-center gap-1 ${
-													d.status === "online"
-														? "text-green-500"
-														: "text-red-500"
+													d.status === "online" ? "text-green-500" : "text-red-500"
 												}`}
 											>
 												{d.status}

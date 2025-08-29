@@ -1,18 +1,18 @@
+import { useEffect, useState } from "react";
+import type { Device, Recording } from "#/entity";
+import deviceService from "@/api/services/deviceService";
+import recordingService from "@/api/services/recordingService";
 import Icon from "@/components/icon/icon";
 import { Button } from "@/ui/button";
 import { Card } from "@/ui/card";
+import { Checkbox } from "@/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import { Text } from "@/ui/typography";
 import { VideoCard } from "./video-card";
-import { useState, useEffect } from "react";
-import recordingService from "@/api/services/recordingService";
-import type { Recording, Device } from "#/entity";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/ui/dropdown-menu";
-import { Checkbox } from "@/ui/checkbox";
-import deviceService from "@/api/services/deviceService";
 
 export default function RecordingsPage() {
 	const [recordings, setRecordings] = useState<Recording[]>([]);
-	const [allDevices, setAllDevices] = useState<Device[]>([]);
+	const [devices, setDevices] = useState<Device[]>([]);
 	const [page, setPage] = useState(1);
 	const [limit] = useState(10);
 	const [selectedDevices, setSelectedDevices] = useState<string[]>([]);
@@ -34,7 +34,7 @@ export default function RecordingsPage() {
 		const getDevices = async () => {
 			try {
 				const data = await deviceService.fetchDevices();
-				setAllDevices(data);
+				setDevices(data);
 			} catch (error) {
 				console.error("Failed to fetch devices", error);
 			}
@@ -86,7 +86,7 @@ export default function RecordingsPage() {
 									<Button variant="outline">Devices ({selectedDevices.length})</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent>
-									{allDevices.map((device) => (
+									{devices.map((device) => (
 										<DropdownMenuItem key={device.id} onSelect={(e) => e.preventDefault()}>
 											<Checkbox
 												checked={selectedDevices.includes(device.name)}
@@ -103,7 +103,7 @@ export default function RecordingsPage() {
 
 				<div className="mb-4">
 					<Text variant="body2" className="text-gray-500">
-						Showing {recordings.length} recordings
+						Showing {recordings.length} recording{recordings.length !== 1 ? "s" : ""} - Page {page}
 					</Text>
 				</div>
 

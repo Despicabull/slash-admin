@@ -1,46 +1,49 @@
-import deviceService from "@/api/services/deviceService";
-import { Device } from "@/types/entity";
-import { Text } from "@/ui/typography";
 import { useEffect, useState } from "react";
-import { CameraFeed } from "./camera-feed";
+import deviceService from "@/api/services/deviceService";
+import type { Device } from "@/types/entity";
+import { Card } from "@/ui/card";
+import { Text } from "@/ui/typography";
 import { getDeviceStatus } from "@/utils/device";
 
 function isDeviceOnline(device: Device): boolean {
-    return getDeviceStatus(device.lastHeartbeat) === "online";
+	return getDeviceStatus(device.lastHeartbeat) === "online";
 }
 
 export default function LiveViewPage() {
-    const [allDevices, setAllDevices] = useState<Device[]>([]);
+	const [devices, setDevices] = useState<Device[]>([]);
 
-    useEffect(() => {
-        const getDevices = async () => {
-            try {
-                const data = await deviceService.fetchDevices();
-                setAllDevices(data);
-            } catch (error) {
-                console.error("Failed to fetch devices", error);
-            }
-        };
+	useEffect(() => {
+		const getDevices = async () => {
+			try {
+				const data = await deviceService.fetchDevices();
+				setDevices(data);
+			} catch (error) {
+				console.error("Failed to fetch devices", error);
+			}
+		};
 
-        getDevices();
-    }, []);
+		getDevices();
+	}, []);
 
-    const onlineDevices = allDevices.filter(isDeviceOnline);
+	const onlineDevices = devices.filter(isDeviceOnline);
 
-    return (
-        <div className="flex flex-col gap-4 w-full">
-            <div className="flex flex-col gap-4">
-                <Text variant="body2" className="font-semibold">
-                    Live Camera Feeds
-                </Text>
-                
-                {/* Camera Feeds Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {onlineDevices.map((device) => (
-                        <CameraFeed key={device.id} device={device} />
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
+	return (
+		<div className="flex flex-col gap-4 w-full">
+			<Card className="flex flex-col p-6">
+				<div className="flex flex-col gap-4 mb-4">
+					<div className="flex items-center justify-between">
+						<Text variant="body2" className="font-semibold text-lg">
+							Live Camera Feeds
+						</Text>
+					</div>
+				</div>
+
+				<div className="mb-4">
+					<Text variant="body2" className="text-gray-500">
+						Showing {onlineDevices.length} live camera feed{onlineDevices.length !== 1 ? "s" : ""}
+					</Text>
+				</div>
+			</Card>
+		</div>
+	);
 }
