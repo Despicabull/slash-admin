@@ -1,5 +1,12 @@
 import packageJson from "../package.json";
 
+interface WebRTCConfig {
+	iceServers: RTCIceServer[];
+	iceCandidatePoolSize: number;
+	bundlePolicy?: RTCBundlePolicy;
+	rtcpMuxPolicy?: RTCRtcpMuxPolicy;
+}
+
 /**
  * Global application configuration type definition
  */
@@ -16,6 +23,8 @@ export type GlobalConfig = {
 	apiBaseUrl: string;
 	/** Routing mode: frontend routing or backend routing */
 	routerMode: "frontend" | "backend";
+	/** WebRTC config */
+	webrtc: WebRTCConfig;
 };
 
 /**
@@ -32,4 +41,10 @@ export const GLOBAL_CONFIG: GlobalConfig = {
 	publicPath: import.meta.env.VITE_APP_PUBLIC_PATH || "/",
 	apiBaseUrl: import.meta.env.VITE_APP_API_BASE_URL || "/api",
 	routerMode: import.meta.env.VITE_APP_ROUTER_MODE || "frontend",
+	webrtc: {
+		iceServers: [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }],
+		iceCandidatePoolSize: 10,
+		bundlePolicy: "max-bundle",
+		rtcpMuxPolicy: "require",
+	},
 };

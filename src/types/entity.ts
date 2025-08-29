@@ -100,6 +100,7 @@ export interface Recording extends CommonOptions {
 
 export interface Device extends CommonOptions {
 	id: string;
+	key: string;
 	name: string;
 	version: string;
 	hostname: string;
