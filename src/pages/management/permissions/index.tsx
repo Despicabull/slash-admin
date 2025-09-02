@@ -27,10 +27,6 @@ export default function PermissionsPage() {
 		fetchPermissions();
 	}, []);
 
-	const handleRowClick = (id: string) => {
-		// TODO: Add a modal window to allow editing the role
-	};
-
 	if (loading) {
 		return <div className="p-6">Loading roles...</div>;
 	}
@@ -58,11 +54,7 @@ export default function PermissionsPage() {
 						</thead>
 						<tbody>
 							{permissions.map((permission) => (
-								<tr
-									key={permission.id}
-									className="border-b last:border-0 cursor-pointer"
-									onClick={() => handleRowClick(permission.id)}
-								>
+								<tr key={permission.id} className="border-b last:border-0">
 									<td className="py-2 font-semibold">{permission.name}</td>
 									<td className="py-2">{permission.code}</td>
 									<td className="py-2">

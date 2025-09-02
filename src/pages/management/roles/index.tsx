@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import roleService from "@/api/services/roleService";
+import EntityModal from "@/components/management/EntityModal";
 import type { Role } from "@/types/entity";
+import { Button } from "@/ui/button";
 import { Card } from "@/ui/card";
 import { Text } from "@/ui/typography";
 
@@ -8,6 +10,8 @@ export default function RolesPage() {
 	const [roles, setRoles] = useState<Role[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
 	useEffect(() => {
 		const fetchRoles = async () => {
@@ -27,8 +31,40 @@ export default function RolesPage() {
 		fetchRoles();
 	}, []);
 
-	const handleRowClick = (id: string) => {
-		// TODO: Add a modal window to allow editing the role
+	const handleRowClick = (role: Role) => {
+		setSelectedRole(role);
+		setIsModalOpen(true);
+	};
+
+	const handleCreateRole = () => {
+		setSelectedRole(null);
+		setIsModalOpen(true);
+	};
+
+	const handleSaveRole = async (data: any) => {
+		try {
+			if (selectedRole) {
+				// Update existing role
+				await roleService.updateRole(selectedRole.id, data);
+			} else {
+				// Create new role
+				await roleService.createRole(data);
+			}
+			// Refresh the list
+			const updatedRoles = await roleService.fetchRoles();
+			setRoles(updatedRoles);
+		} catch (err) {
+			console.error("Failed to save role", err);
+			throw err;
+		}
+	};
+
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+		// Delay resetting selectedRole to prevent title flicker during modal close animation
+		setTimeout(() => {
+			setSelectedRole(null);
+		}, 150);
 	};
 
 	if (loading) {
@@ -46,6 +82,9 @@ export default function RolesPage() {
 					<Text variant="body2" className="font-semibold">
 						Roles
 					</Text>
+					<Button onClick={handleCreateRole} size="sm">
+						Add Role
+					</Button>
 				</div>
 				<div className="flex-1 overflow-x-auto">
 					<table className="w-full text-sm">
@@ -61,7 +100,7 @@ export default function RolesPage() {
 								<tr
 									key={role.id}
 									className="border-b last:border-0 cursor-pointer"
-									onClick={() => handleRowClick(role.id)}
+									onClick={() => handleRowClick(role)}
 								>
 									<td className="py-2 font-semibold">{role.name}</td>
 									<td className="py-2">{role.permissions ? role.permissions.length : 0} permissions</td>
@@ -75,6 +114,15 @@ export default function RolesPage() {
 				</div>
 				{roles.length === 0 && <div className="text-center py-8 text-gray-500">No roles found</div>}
 			</Card>
+
+			<EntityModal
+				open={isModalOpen}
+				onClose={handleCloseModal}
+				onSubmit={handleSaveRole}
+				title={selectedRole ? "Edit Role" : "Add Role"}
+				entity={selectedRole}
+				entityType="role"
+			/>
 		</div>
 	);
 }

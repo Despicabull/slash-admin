@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import siteService from "@/api/services/siteService";
+import EntityModal from "@/components/management/EntityModal";
 import type { Site } from "@/types/entity";
+import { Button } from "@/ui/button";
 import { Card } from "@/ui/card";
 import { Text } from "@/ui/typography";
 
 export default function SitesPage() {
-	const navigate = useNavigate();
 	const [sites, setSites] = useState<Site[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedSite, setSelectedSite] = useState<Site | null>(null);
 
 	useEffect(() => {
 		const getSites = async () => {
@@ -29,8 +31,40 @@ export default function SitesPage() {
 		getSites();
 	}, []);
 
-	const handleRowClick = (id: string) => {
-		navigate(`/management/sites/${id}`);
+	const handleRowClick = (site: Site) => {
+		setSelectedSite(site);
+		setIsModalOpen(true);
+	};
+
+	const handleCreateSite = () => {
+		setSelectedSite(null);
+		setIsModalOpen(true);
+	};
+
+	const handleSaveSite = async (data: any) => {
+		try {
+			if (selectedSite) {
+				// Update existing site
+				await siteService.updateSite(selectedSite.id, data);
+			} else {
+				// Create new site
+				await siteService.createSite(data);
+			}
+			// Refresh the list
+			const updatedSites = await siteService.fetchSites();
+			setSites(updatedSites);
+		} catch (err) {
+			console.error("Failed to save site", err);
+			throw err;
+		}
+	};
+
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+		// Delay resetting selectedSite to prevent title flicker during modal close animation
+		setTimeout(() => {
+			setSelectedSite(null);
+		}, 150);
 	};
 
 	if (loading) {
@@ -48,6 +82,9 @@ export default function SitesPage() {
 					<Text variant="body2" className="font-semibold">
 						Sites
 					</Text>
+					<Button onClick={handleCreateSite} size="sm">
+						Add Site
+					</Button>
 				</div>
 				<div className="flex-1 overflow-x-auto">
 					<table className="w-full text-sm">
@@ -64,7 +101,7 @@ export default function SitesPage() {
 								<tr
 									key={site.id}
 									className="border-b last:border-0 cursor-pointer"
-									onClick={() => handleRowClick(site.id)}
+									onClick={() => handleRowClick(site)}
 								>
 									<td className="py-2 font-semibold">{site.name}</td>
 									<td className="py-2">{site.address || "N/A"}</td>
@@ -79,6 +116,15 @@ export default function SitesPage() {
 				</div>
 				{sites.length === 0 && <div className="text-center py-8 text-gray-500">No sites found</div>}
 			</Card>
+
+			<EntityModal
+				open={isModalOpen}
+				onClose={handleCloseModal}
+				onSubmit={handleSaveSite}
+				title={selectedSite ? "Edit Site" : "Add Site"}
+				entity={selectedSite}
+				entityType="site"
+			/>
 		</div>
 	);
 }
