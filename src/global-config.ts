@@ -7,6 +7,20 @@ interface WebRTCConfig {
 	rtcpMuxPolicy?: RTCRtcpMuxPolicy;
 }
 
+// Helper function to parse ICE servers from environment variable
+const parseIceServers = (envValue?: string): RTCIceServer[] => {
+	if (!envValue) {
+		return [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }];
+	}
+
+	try {
+		return JSON.parse(envValue);
+	} catch {
+		console.warn("Invalid VITE_APP_WEBRTC_ICE_SERVERS format, using defaults");
+		return [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }];
+	}
+};
+
 /**
  * Global application configuration type definition
  */
@@ -42,9 +56,9 @@ export const GLOBAL_CONFIG: GlobalConfig = {
 	apiBaseUrl: import.meta.env.VITE_APP_API_BASE_URL || "/api",
 	routerMode: import.meta.env.VITE_APP_ROUTER_MODE || "frontend",
 	webrtc: {
-		iceServers: [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }],
-		iceCandidatePoolSize: 10,
-		bundlePolicy: "max-bundle",
-		rtcpMuxPolicy: "require",
+		iceServers: parseIceServers(import.meta.env.VITE_APP_WEBRTC_ICE_SERVERS),
+		iceCandidatePoolSize: parseInt(import.meta.env.VITE_APP_WEBRTC_ICE_CANDIDATE_POOL_SIZE || "10"),
+		bundlePolicy: (import.meta.env.VITE_APP_WEBRTC_BUNDLE_POLICY as RTCBundlePolicy) || "max-bundle",
+		rtcpMuxPolicy: (import.meta.env.VITE_APP_WEBRTC_RTCP_MUX_POLICY as RTCRtcpMuxPolicy) || "require",
 	},
 };
